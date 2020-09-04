@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import Card from "./components/card/card.component";
+import LandingPage from "./containers/landingpage/landingPage.component";
 
 function App() {
   return (
     <div className="App">
-      <Card />
+      <LandingPage />
     </div>
   );
 }
