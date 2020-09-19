@@ -5,7 +5,7 @@ import Header from "./components/header/header.component";
 import LandingPage from "./containers/landingpage/landingPage.component";
 import ShopPage from "./containers/shop/shop.component";
 import Login from "./containers/login/login.component";
-import { auth } from "./firebase/firebase.utils";
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 class App extends Component {
   state = {
@@ -15,10 +15,18 @@ class App extends Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
-      this.setState({ user: user });
-
-      console.log(user);
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+        userRef.onSnapshot((snapShot) => {
+          this.setState({
+            user: {
+              id: snapShot.id,
+              ...snapShot.data(),
+            },
+          });
+        });
+      }
     });
   }
 
